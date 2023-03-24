@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:titleTextAppearance="@style/TextAppearance.MdcTypographyStyles.Headline5"
+            app:title="@string/app_name"
+            />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/datas"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        tools:listitem="@layout/card_menu"-->
+<!--        android:layout_below="@+id/appBarLayout"-->
+<!--        />-->
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appBarLayout"
+        android:text="Logout"
+        />
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        app:elevation="15dp"
+        app:itemIconTint="@color/md_theme_light_primary"
+        app:itemTextColor="@color/md_theme_light_primary"
+        app:itemTextAppearanceActive="@style/TextAppearance.MdcTypographyStyles.Subtitle2"
+        app:itemTextAppearanceInactive="@style/TextAppearance.MdcTypographyStyles.Subtitle2"
+        app:menu="@menu/nav_menu" />
+
+</RelativeLayout>

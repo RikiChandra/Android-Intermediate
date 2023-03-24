@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">SharingApp</string>
+    <string name="label">Label</string>
+    <string name="home">Home</string>
+    <string name="gallery">Gallery</string>
+    <string name="profile">Profile</string>
+    <string name="content_description_media">Gambar</string>
+    <string name="title">Title</string>
+    <string name="des">Deskripsi</string>
+    <string name="share">Share</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="address">Address</string>
+    <string name="name">Name</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+</resources>
