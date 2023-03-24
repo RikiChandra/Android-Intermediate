@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -35,11 +36,14 @@ class MainActivity : AppCompatActivity() {
                 val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
+            } else {
+                Toast.makeText(this, "Berhasil Login", Toast.LENGTH_SHORT).show()
             }
         }
 
         binding.logout.setOnClickListener {
             viewModel.logout()
+            finish()
         }
 
 
