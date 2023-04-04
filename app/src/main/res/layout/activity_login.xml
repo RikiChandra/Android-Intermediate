@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:context=".auth.LoginActivity">
 
 
@@ -97,6 +96,15 @@
                 android:textColor="@color/md_theme_light_primary"
                 android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Button"
                 android:text="@string/login" />
+
+            <TextView
+                android:id="@+id/textViewLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Subtitle2"
+                android:text="@string/dont_have_account" />
 
 
         </LinearLayout>

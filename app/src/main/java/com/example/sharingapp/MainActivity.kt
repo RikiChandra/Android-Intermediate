@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.sharingapp.auth.LoginActivity
 import com.example.sharingapp.databinding.ActivityMainBinding
 import com.example.sharingapp.setting.SharedPreference
-import com.example.sharingapp.setting.SharedPreferenceViewModel
+import com.example.sharingapp.setting.ViewModelFactory
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 class MainActivity : AppCompatActivity() {
@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         val preference  = SharedPreference.getInstance(dataStore)
 
-        viewModel = ViewModelProvider(this, SharedPreferenceViewModel(preference, this))[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this, ViewModelFactory(preference, this))[MainViewModel::class.java]
 
         viewModel.isLogged.observe(this){
             if (!it){

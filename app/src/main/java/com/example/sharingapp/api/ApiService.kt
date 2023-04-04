@@ -1,6 +1,7 @@
 package com.example.sharingapp.api
 
 import com.example.sharingapp.responses.LoginResponses
+import com.example.sharingapp.responses.RegisterResponses
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -14,4 +15,14 @@ interface ApiService {
         @Field("email") email: String,
         @Field("password") password: String
     ): Call<LoginResponses>
+
+
+    @POST("register")
+    @FormUrlEncoded
+    fun register(
+        @Field("name") name: String,
+        @Field("email") email: String,
+        @Field("password") password: String
+    ): Call<RegisterResponses>
+
 }

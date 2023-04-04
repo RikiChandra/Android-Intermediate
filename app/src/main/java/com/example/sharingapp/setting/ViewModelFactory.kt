@@ -5,8 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.sharingapp.MainViewModel
 import com.example.sharingapp.auth.LoginViewModel
+import com.example.sharingapp.auth.RegisterViewModel
 
-class SharedPreferenceViewModel(private val preference: SharedPreference, private val context: Context) : ViewModelProvider.Factory {
+class ViewModelFactory(private val preference: SharedPreference, private val context: Context) : ViewModelProvider.Factory {
 
 
 
@@ -18,6 +19,9 @@ class SharedPreferenceViewModel(private val preference: SharedPreference, privat
             }
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
                 MainViewModel(preference) as T
+            }
+            modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
+                RegisterViewModel(preference) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class" + modelClass.name)

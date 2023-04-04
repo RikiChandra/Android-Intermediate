@@ -16,4 +16,10 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
     <string name="error">Password harus 8 karakter</string>
+    <string name="error_email">Email tidak valid</string>
+    <string name="error_nama">Nama tidak boleh kosong</string>
+    <string name="already_login">Already have an account? Login</string>
+    <string name="dont_have_account">Don\'t have an account? Register</string>
+    <string name="login_success">Login Success</string>
+    <string name="register_success">Register Success</string>
 </resources>
