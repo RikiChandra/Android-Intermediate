@@ -13,7 +13,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
-import com.example.sharingapp.MainActivity
+import com.example.sharingapp.view.MainActivity
 import com.example.sharingapp.R
 import com.example.sharingapp.databinding.ActivityLoginBinding
 import com.example.sharingapp.setting.SharedPreference

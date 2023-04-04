@@ -3,7 +3,7 @@ package com.example.sharingapp.setting
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.sharingapp.MainViewModel
+import com.example.sharingapp.view.MainViewModel
 import com.example.sharingapp.auth.LoginViewModel
 import com.example.sharingapp.auth.RegisterViewModel
 
