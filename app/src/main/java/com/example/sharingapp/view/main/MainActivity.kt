@@ -1,13 +1,16 @@
 package com.example.sharingapp.view.main
 
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -27,6 +30,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private val storyAdapter = StoryAdapter(this)
+
+
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,13 +77,22 @@ class MainActivity : AppCompatActivity() {
 
         addActivity()
 
+
     }
 
     private fun addActivity(){
         binding.fab.setOnClickListener {
-            startActivity(Intent(this, AddStoryActivity::class.java))
+            storyIntent.launch(Intent(this, AddStoryActivity::class.java))
         }
     }
+
+    private val storyIntent =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == INTENT_ADD_STORY) {
+                storyAdapter.submitList(listOf())
+                viewModel.getStories(null, null, null)
+            }
+        }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -96,6 +113,11 @@ class MainActivity : AppCompatActivity() {
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    companion object {
+        const val INTENT_ADD_STORY = 2222
+        const val REQUEST_PERMISSION_CODE = 100
     }
 
 
