@@ -12,6 +12,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.sharingapp.auth.LoginActivity
 import com.example.sharingapp.databinding.ActivitySplashScreenBinding
 import com.example.sharingapp.setting.SharedPreference
+import com.example.sharingapp.view.main.MainActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -22,6 +23,7 @@ class SplashScreen : AppCompatActivity() {
         val binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.hide()
 
         val preference  = SharedPreference.getInstance(dataStore)
 

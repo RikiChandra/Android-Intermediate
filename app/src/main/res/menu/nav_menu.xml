@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
         android:id="@+id/navHome"
-        android:icon="@drawable/baseline_home_24"
+        android:checked="true"
+        android:icon="@drawable/home_border"
         android:title="@string/home" />
 
     <item
-        android:id="@+id/navProfile"
-        android:icon="@drawable/baseline_person_24"
-        android:title="@string/profile" />
+        android:id="@+id/navAdd"
+        android:enabled="true"
+        android:icon="@drawable/add_border"
+        android:title="@string/add_post" />
 
 </menu>

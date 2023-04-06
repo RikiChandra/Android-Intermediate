@@ -23,4 +23,12 @@
     <string name="login_success">Login Success</string>
     <string name="register_success">Register Success</string>
     <string name="logout">"Logout</string>
+    <string name="add_post">Add Post</string>
+    <string name="createdAt">Created At</string>
+    <string name="updatedAt">Updated At</string>
+    <string name="laLon">Lantitude Longitude</string>
+    <string name="errorDetail">Failed to retrieve story data from intent</string>
+    <string name="addDes">Add description</string>
+    <string name="addStory">Add Story</string>
+    <string name="camera">Camera</string>
 </resources>

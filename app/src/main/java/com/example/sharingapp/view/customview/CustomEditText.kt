@@ -1,4 +1,4 @@
-package com.example.sharingapp.view
+package com.example.sharingapp.view.customview
 
 import android.content.Context
 import android.text.Editable

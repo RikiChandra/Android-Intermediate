@@ -29,7 +29,7 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-
+        supportActionBar?.hide()
 
 
         val pref = SharedPreference.getInstance(dataStore)

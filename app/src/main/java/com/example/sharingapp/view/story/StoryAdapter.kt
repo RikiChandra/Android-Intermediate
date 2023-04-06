@@ -1,6 +1,7 @@
-package com.example.sharingapp.view
+package com.example.sharingapp.view.story
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -9,8 +10,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.sharingapp.databinding.CardMenuBinding
 import com.example.sharingapp.responses.Story
+import com.example.sharingapp.view.detail.DetailActivity
 
-class StoryAdapter(private val context: Context) : ListAdapter<Story, StoryAdapter.ViewHolder>(DIFF_CALLBACK) {
+class StoryAdapter(private val context: Context) : ListAdapter<Story, StoryAdapter.ViewHolder>(
+    DIFF_CALLBACK
+) {
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Story>() {
@@ -30,19 +34,26 @@ class StoryAdapter(private val context: Context) : ListAdapter<Story, StoryAdapt
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val story = getItem(position)
-        holder.bind(story)
-    }
+        val story = getItem(holder.adapterPosition)
+        val context = holder.itemView.context
 
-    inner class ViewHolder(private val binding : CardMenuBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(story: Story) {
-            binding.title.text = story.name
-            binding.desc.text = story.createdAt
+        holder.binding.title.text = story.name
+        holder.binding.desc.text = story.createdAt
 
-            Glide.with(context)
-                .load(story.photoUrl)
-                .into(binding.img)
+        Glide.with(holder.itemView.context)
+            .load(story.photoUrl)
+            .into(holder.binding.img)
+
+        holder.itemView.setOnClickListener {
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("story", story)
+            context.startActivity(intent)
         }
+
+
+
     }
+
+    inner class ViewHolder(val binding : CardMenuBinding) : RecyclerView.ViewHolder(binding.root)
 }
 

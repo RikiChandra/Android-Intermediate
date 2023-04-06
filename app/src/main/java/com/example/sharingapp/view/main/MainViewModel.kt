@@ -1,11 +1,10 @@
-package com.example.sharingapp.view
+package com.example.sharingapp.view.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sharingapp.api.ApiConfig
-import com.example.sharingapp.api.ApiService
 import com.example.sharingapp.responses.StoryResponses
 import com.example.sharingapp.setting.SettingEvent
 import com.example.sharingapp.setting.SharedPreference
@@ -56,12 +55,17 @@ class MainViewModel(private val preference: SharedPreference) : ViewModel() {
             _isLoading.postValue(true)
             val token = preference.ambilToken().first()
             val response = withContext(Dispatchers.IO) {
-                ApiConfig.getApiService().getStories("Bearer $token", page, size, location).execute()
+                ApiConfig.getApiService().getStories("Bearer $token", page, size, location)
+                    .execute()
             }
             if (response.isSuccessful) {
                 response.body()?.let { storyData.postValue(it) }
             } else {
-                storyError.postValue(SettingEvent(response.errorBody()?.string() ?: "Unknown error"))
+                storyError.postValue(
+                    SettingEvent(
+                        response.errorBody()?.string() ?: "Unknown error"
+                    )
+                )
             }
             _isLoading.postValue(false)
         }

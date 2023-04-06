@@ -1,4 +1,5 @@
-package com.example.sharingapp.view
+package com.example.sharingapp.view.main
+
 
 import android.content.Context
 import android.content.Intent
@@ -17,6 +18,8 @@ import com.example.sharingapp.auth.LoginActivity
 import com.example.sharingapp.databinding.ActivityMainBinding
 import com.example.sharingapp.setting.SharedPreference
 import com.example.sharingapp.setting.ViewModelFactory
+import com.example.sharingapp.view.story.AddStoryActivity
+import com.example.sharingapp.view.story.StoryAdapter
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 class MainActivity : AppCompatActivity() {
@@ -64,11 +67,16 @@ class MainActivity : AppCompatActivity() {
             binding.swipe.isRefreshing = it
         }
 
-
-
-
+        addActivity()
 
     }
+
+    private fun addActivity(){
+        binding.fab.setOnClickListener {
+            startActivity(Intent(this, AddStoryActivity::class.java))
+        }
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
@@ -89,6 +97,6 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+
 }
-
-
