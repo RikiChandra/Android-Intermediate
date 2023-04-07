@@ -16,8 +16,9 @@ import com.example.sharingapp.view.main.MainActivity
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 class SplashScreen : AppCompatActivity() {
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivitySplashScreenBinding.inflate(layoutInflater)

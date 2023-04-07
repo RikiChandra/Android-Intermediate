@@ -8,9 +8,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Message
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,11 +21,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.sharingapp.camera.CameraXActivity
 import com.example.sharingapp.databinding.ActivityAddStoryBinding
 import com.example.sharingapp.responses.AddResponse
-import com.example.sharingapp.responses.StoryResponses
 import com.example.sharingapp.setting.*
 import com.example.sharingapp.view.main.MainActivity
 import java.io.*
 
+@Suppress("DEPRECATION")
 class AddStoryActivity : AppCompatActivity() {
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")

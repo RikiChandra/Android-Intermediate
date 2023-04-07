@@ -42,40 +42,6 @@ class RegisterViewModel(private val sharedPreference: SharedPreference) : ViewMo
         get() = _isLoading
 
 
-//    fun register(name: String, email: String, password: String) {
-//        _isLoading.postValue(true)
-//        val client = ApiConfig.getApiService().register(name, email, password)
-//        client.enqueue(object : Callback<RegisterResponses> {
-//            override fun onResponse(
-//                call: Call<RegisterResponses>,
-//                response: Response<RegisterResponses>
-//            ) {
-//                _isLoading.postValue(false)
-//                if (response.isSuccessful) {
-//                    response.body()?.let{
-//                        if (it.error as Boolean){
-//                            _errorRegister.value = SettingEvent(it.message)
-//                        } else{
-//                            _isRegister.value= response.body() as RegisterResponses
-//                        }
-//                    } ?: run {
-//                        _errorRegister.value = SettingEvent("Terjadi Kesalahan")
-//                    }
-//                } else {
-//                    val body: RegisterResponses? = Gson().fromJson(response.errorBody()?.string(), RegisterResponses::class.java)
-//
-//                    _errorRegister.value = SettingEvent(body?.message ?: "Terjadi Kesalahan")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<RegisterResponses>, t: Throwable) {
-//                _isLoading.postValue(false)
-//                _errorRegister.value = SettingEvent(t.message ?: "Terjadi Kesalahan")
-//            }
-//
-//        })
-//    }
-
     fun register(name: String, email: String, password: String) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().register(name, email, password)

@@ -30,8 +30,6 @@ class MainViewModel(private val preference: SharedPreference) : ViewModel() {
 
 
     private val _isLogged = MutableLiveData<Boolean>()
-    val isLogged: LiveData<Boolean>
-        get() = _isLogged
 
 
     init {
