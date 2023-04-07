@@ -1,15 +1,20 @@
 package com.example.sharingapp.view.story
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.app.ActivityOptionsCompat
+import androidx.core.util.Pair
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.sharingapp.R
 import com.example.sharingapp.databinding.CardMenuBinding
 import com.example.sharingapp.responses.Story
+import com.example.sharingapp.setting.formatElapsedTime
 import com.example.sharingapp.view.detail.DetailActivity
 
 class StoryAdapter(private val context: Context) : ListAdapter<Story, StoryAdapter.ViewHolder>(
@@ -38,7 +43,8 @@ class StoryAdapter(private val context: Context) : ListAdapter<Story, StoryAdapt
         val context = holder.itemView.context
 
         holder.binding.title.text = story.name
-        holder.binding.desc.text = story.createdAt
+        holder.binding.createdAt.text = formatElapsedTime(story.createdAt, context)
+
 
         Glide.with(holder.itemView.context)
             .load(story.photoUrl)
@@ -47,7 +53,23 @@ class StoryAdapter(private val context: Context) : ListAdapter<Story, StoryAdapt
         holder.itemView.setOnClickListener {
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra("story", story)
-            context.startActivity(intent)
+
+            val optionCompat : ActivityOptionsCompat =
+                ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    holder.itemView.context as Activity,
+                    Pair(
+                        holder.binding.img,
+                        context.getString(R.string.transitionImage)),
+
+                    Pair(holder.binding.title,
+                        context.getString(R.string.name)),
+
+                    Pair(holder.binding.createdAt,
+                        context.getString(R.string.createdAt)),
+                )
+
+
+            context.startActivity(intent, optionCompat.toBundle())
         }
 
 

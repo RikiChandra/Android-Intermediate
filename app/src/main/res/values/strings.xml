@@ -31,4 +31,12 @@
     <string name="addDes">Add description</string>
     <string name="addStory">Add Story</string>
     <string name="camera">Camera</string>
+    <string name="transitionImage">image</string>
+    <string name="lastUpload">Last upload a few seconds ago</string>
+    <string name="lastUploadOne">Last upload 1 minute ago</string>
+    <string name="lastUploadMinute">Last upload %d minutes ago</string>
+    <string name="lastUploadHour">Last upload 1 hours ago</string>
+    <string name="lastUploadHours">Last upload %d hours ago</string>
+
+
 </resources>

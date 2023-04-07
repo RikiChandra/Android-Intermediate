@@ -38,11 +38,11 @@
             app:layout_constraintTop_toBottomOf="@id/img" />
 
         <TextView
-            android:id="@+id/desc"
+            android:id="@+id/createdAt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="@string/des"
+            android:text="@string/createdAt"
             android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Body1"
             android:textColor="?android:attr/textColorSecondary"
             app:layout_constraintEnd_toEndOf="parent"

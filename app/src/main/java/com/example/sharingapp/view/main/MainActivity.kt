@@ -1,7 +1,6 @@
 package com.example.sharingapp.view.main
 
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +9,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -23,6 +21,8 @@ import com.example.sharingapp.setting.SharedPreference
 import com.example.sharingapp.setting.ViewModelFactory
 import com.example.sharingapp.view.story.AddStoryActivity
 import com.example.sharingapp.view.story.StoryAdapter
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import androidx.recyclerview.widget.GridLayoutManager
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 class MainActivity : AppCompatActivity() {
@@ -31,11 +31,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewModel: MainViewModel
     private val storyAdapter = StoryAdapter(this)
 
-
-
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -43,7 +38,11 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        binding.datas.layoutManager = LinearLayoutManager(this)
+        if (resources.configuration.orientation == ORIENTATION_LANDSCAPE) {
+            binding.datas.layoutManager = GridLayoutManager(this, 2)
+        } else {
+            binding.datas.layoutManager = LinearLayoutManager(this)
+        }
 
         val preference = SharedPreference.getInstance(dataStore)
         viewModel = ViewModelProvider(this, ViewModelFactory(preference, this))[MainViewModel::class.java]
@@ -117,7 +116,6 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val INTENT_ADD_STORY = 2222
-        const val REQUEST_PERMISSION_CODE = 100
     }
 
 

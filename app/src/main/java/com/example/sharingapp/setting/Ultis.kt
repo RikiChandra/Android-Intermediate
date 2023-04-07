@@ -16,6 +16,8 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.TimeZone
+import java.util.concurrent.TimeUnit
 
 
 private const val FILENAME_FORMAT = "dd-MMM-yyyy"
@@ -29,6 +31,27 @@ fun createCustomTempFile(context: Context): File {
     val storageDir: File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
     return File.createTempFile(timeStamp, ".jpg", storageDir)
 }
+
+fun formatElapsedTime(createdAt: String, context: Context): String {
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+    dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+    val elapsedTime = System.currentTimeMillis() - dateFormat.parse(createdAt).time
+    val elapsedTimeMinutes = TimeUnit.MILLISECONDS.toMinutes(elapsedTime)
+
+    return when {
+        elapsedTimeMinutes < 1 -> context.getString(R.string.lastUpload)
+        elapsedTimeMinutes == 1L -> context.getString(R.string.lastUploadOne)
+        elapsedTimeMinutes < 60 -> context.getString(R.string.lastUploadMinute, elapsedTimeMinutes)
+        elapsedTimeMinutes == 60L -> context.getString(R.string.lastUploadHour)
+        else -> {
+            val elapsedTimeHours = TimeUnit.MILLISECONDS.toHours(elapsedTime)
+            context.getString(R.string.lastUploadHours, elapsedTimeHours)
+        }
+    }
+}
+
+
 
 fun createFile(application: Application): File {
     val mediaDir = application.externalMediaDirs.firstOrNull()?.let {
