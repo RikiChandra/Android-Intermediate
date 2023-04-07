@@ -18,6 +18,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import com.example.sharingapp.R
 import com.example.sharingapp.camera.CameraXActivity
 import com.example.sharingapp.databinding.ActivityAddStoryBinding
 import com.example.sharingapp.responses.AddResponse
@@ -44,7 +45,7 @@ class AddStoryActivity : AppCompatActivity() {
             if (!allPermissionsGranted()) {
                 Toast.makeText(
                     this,
-                    "Tidak mendapatkan permission.",
+                    getString(R.string.noPerimission),
                     Toast.LENGTH_SHORT
                 ).show()
                 finish()
@@ -82,7 +83,7 @@ class AddStoryActivity : AppCompatActivity() {
             launcherIntentGallery.launch(
                 Intent.createChooser(
                     Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" },
-                    "Select Picture"
+                    getString(R.string.selectPicture)
                 )
             )
         }
@@ -107,7 +108,7 @@ class AddStoryActivity : AppCompatActivity() {
                 )
 
             } else {
-                Toast.makeText(this, "Please fill all field", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.fillField), Toast.LENGTH_SHORT).show()
             }
 
         }

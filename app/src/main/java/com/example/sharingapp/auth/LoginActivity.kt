@@ -4,11 +4,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Patterns
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -38,64 +36,20 @@ class LoginActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this, ViewModelFactory(SharedPreference.getInstance(dataStore), this))[LoginViewModel::class.java]
 
-        // Inisialisasi TextChangedListener pada onCreate()
-        val passwordInput = binding.password
-        val passwordLayout = binding.passwordLayout
-
-        passwordInput.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Password validation
-                // Display error automatically if the password doesn't meet certain criteria
-                if (!s.isNullOrEmpty() && s.length < 8) {
-                    passwordLayout.error = getString(R.string.error)
-                } else {
-                    passwordLayout.error = null
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        binding.email.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                // Email validation
-                // Display error automatically if the email doesn't meet certain criteria
-                if (!Patterns.EMAIL_ADDRESS.matcher(s).matches()) {
-                    binding.emailLayout.error = getString(R.string.error_email)
-                } else {
-                    binding.emailLayout.error = null
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
 
         binding.loginButton.setOnClickListener {
-            val username = binding.email.text.toString()
-            val password = passwordInput.text.toString()
+            val username = binding.email.text.toString().trim()
+            val password = binding.password.text.toString().trim()
 
-            if (!Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
-                binding.emailLayout.error = getString(R.string.error_email)
-                return@setOnClickListener
-            } else {
-                binding.emailLayout.error = null
-            }
-
-            if (password.length < 8) {
-                passwordLayout.error = getString(R.string.error)
-                return@setOnClickListener
-            } else {
-                passwordLayout.error = null
+            if (username.isEmpty() || password.isEmpty()){
+                Toast.makeText(this, getString(R.string.emptyField), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener // Menghentikan eksekusi kode di sini jika username atau password kosong
             }
 
             viewModel.login(username, password)
             hideKeyboard()
         }
+
 
 
 
@@ -106,7 +60,11 @@ class LoginActivity : AppCompatActivity() {
 
 
         viewModel.isLoading.observe(this) {
-            binding.loading.visibility = View.VISIBLE
+            loadings : Boolean ->
+            binding.apply {
+                loading.visibility = if (loadings) View.VISIBLE else View.GONE
+                loginButton.isEnabled = !loadings
+            }
         }
 
         viewModel.isLogged.observe(this) { isLogged ->
@@ -116,8 +74,8 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 binding.loading.visibility = View.GONE
                 MaterialAlertDialogBuilder(this)
-                    .setTitle("Login Failed")
-                    .setMessage("Invalid email or password")
+                    .setTitle(getString(R.string.loginFailed))
+                    .setMessage(getString(R.string.invalidPassowordOrEmail))
                     .setPositiveButton("OK", null)
                     .show()
             }

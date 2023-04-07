@@ -8,7 +8,7 @@
     <string name="title">Title</string>
     <string name="des">Deskripsi</string>
     <string name="share">Share</string>
-    <string name="email">Email</string>
+    <string name="email">Masukkan Email</string>
     <string name="phone">Phone</string>
     <string name="address">Address</string>
     <string name="name">Name</string>
@@ -37,6 +37,14 @@
     <string name="lastUploadMinute">Last upload %d minutes ago</string>
     <string name="lastUploadHour">Last upload 1 hours ago</string>
     <string name="lastUploadHours">Last upload %d hours ago</string>
-
+    <string name="selectPicture">Select Picture</string>
+    <string name="noPerimission">Tidak mendapatkan permission.</string>
+    <string name="fillField">Please fill all field</string>
+    <string name="failedTakePicture">Gagal mengambil gambar.</string>
+    <string name="failedShowCamera">Gagal memunculkan kamera.</string>
+    <string name="loginFailed">Login Failed</string>
+    <string name="invalidPassowordOrEmail">Invalid email or password</string>
+    <string name="login_disabled">Form Kosong</string>
+    <string name="emptyField">Username and password cannot be empty</string>
 
 </resources>
