@@ -39,6 +39,7 @@ class LoginViewModel(private val preference: SharedPreference) : ViewModel() {
                         preference.isState()
                         _isLogged.postValue(true)
                         Log.d("TAG", "Token Saya: ${responseBody.loginResult.token}")
+                        Log.d("TAG", "id Saya: ${responseBody.loginResult.userId}")
                     } else {
                         _isLogged.postValue(false)
                     }

@@ -9,17 +9,6 @@
     tools:context=".view.story.AddStoryActivity">
 
 
-        <ProgressBar
-            android:id="@+id/loading"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true"
-            android:visibility="invisible"
-            tools:ignore="MissingConstraints" />
-
-
-
     <!-- Gallery button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/gallery_button"
@@ -80,9 +69,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-
+    <!-- Loading Progress Bar -->
+    <ProgressBar
+        android:id="@+id/loading"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@id/description_text_input"
+        app:layout_constraintEnd_toEndOf="@id/preview_image"
+        app:layout_constraintStart_toStartOf="@id/preview_image"
+        app:layout_constraintTop_toTopOf="@id/preview_image"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 

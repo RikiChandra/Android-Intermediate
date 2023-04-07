@@ -70,11 +70,11 @@ fun rotateBitmap(bitmap: Bitmap, isBackCamera: Boolean = false): Bitmap {
     }
 }
 
-fun uriToFile(selectedImg: Uri, context: Context): File {
+fun uriToFile(context: Context, uriToFile: Uri): File {
     val contentResolver: ContentResolver = context.contentResolver
     val myFile = createCustomTempFile(context)
 
-    val inputStream = contentResolver.openInputStream(selectedImg) as InputStream
+    val inputStream = contentResolver.openInputStream(uriToFile) as InputStream
     val outputStream: OutputStream = FileOutputStream(myFile)
     val buf = ByteArray(1024)
     var len: Int

@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Message
 import android.text.TextUtils
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -31,19 +32,9 @@ class AddStoryActivity : AppCompatActivity() {
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
     private lateinit var binding: ActivityAddStoryBinding
-
-    private lateinit var photoPath: String
-
     private var getFile : File? = null
-
     private lateinit var viewModel: StoryViewModel
 
-    companion object {
-        const val CAMERA_X_RESULT = 200
-
-        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
-        private const val REQUEST_CODE_PERMISSIONS = 10
-    }
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -90,45 +81,58 @@ class AddStoryActivity : AppCompatActivity() {
         }
 
         binding.galleryButton.setOnClickListener {
-            openGallery()
+            launcherIntentGallery.launch(
+                Intent.createChooser(
+                    Intent(Intent.ACTION_GET_CONTENT).apply { type = "image/*" },
+                    "Select Picture"
+                )
+            )
         }
 
         binding.postButton.setOnClickListener {
-            Log.d("AddStoryActivity", "Post button clicked")
-            if (getFile != null && !TextUtils.isEmpty(binding.descriptionEditText.text.toString())) {
-                val compressedFile = reduceFileImage(getFile!!)
-                if (compressedFile != null) {
-                    viewModel.post(
-                        onSuccessCallback = object : OnSuccessCallback<AddResponse> {
-                            override fun onSuccess(response: AddResponse) {
-                                // handle success
-                                Toast.makeText(
-                                    this@AddStoryActivity,
-                                    response.message,
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                setResult(MainActivity.INTENT_ADD_STORY)
-                                finish()
-                            }
-                        },
-                        description = binding.descriptionEditText.text.toString(),
-                        photo = compressedFile,
-                        lat = null, // or pass your desired value
-                        lon = null // or pass your desired value
-                    )
-                } else {
-                    Toast.makeText(this, "Gagal memampatkan file gambar", Toast.LENGTH_SHORT).show()
-                }
+            if (getFile != null && !TextUtils.isEmpty((binding.descriptionEditText.text.toString()))){
+                val comperssedFile = reduceFileImage(getFile!!)
+
+                viewModel.store(
+                    object : OnSuccessCallback<AddResponse> {
+                        override fun onSuccess(message: AddResponse) {
+                            Toast.makeText(this@AddStoryActivity, message.message, Toast.LENGTH_SHORT).show()
+                            setResult(MainActivity.INTENT_ADD_STORY)
+                            finish()
+                        }
+
+                    },
+                    binding.descriptionEditText.text.toString(),
+                    comperssedFile,
+                    lat = null,
+                    lon = null
+                )
+
             } else {
-                Toast.makeText(this, "Isi semua form", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Please fill all field", Toast.LENGTH_SHORT).show()
             }
+
         }
 
 
 
 
         viewModel.isLoading.observe(this) {
-           binding.loading.visibility = if (it) android.view.View.VISIBLE else android.view.View.GONE
+           isLoading ->
+            binding.apply {
+                loading.visibility = if (isLoading) View.VISIBLE else View.GONE
+                cameraButton.isEnabled = !isLoading
+                galleryButton.isEnabled = !isLoading
+                postButton.isEnabled = !isLoading
+                descriptionEditText.isEnabled = !isLoading
+            }
+        }
+
+        viewModel.error.observe(this) {
+            error -> error.getContentIfNotHandled()?.let {
+                Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            }
+
         }
 
 
@@ -142,25 +146,14 @@ class AddStoryActivity : AppCompatActivity() {
 
     }
 
-    private fun openGallery(){
-        val intent = Intent()
-        intent.action = Intent.ACTION_GET_CONTENT
-        intent.type = "image/*"
-        val chooser = Intent.createChooser(intent, "Choose a Picture")
-        launcherIntentGallery.launch(chooser)
-    }
 
     private val launcherIntentGallery = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == RESULT_OK) {
-            val selectedImg: Uri = result.data?.data as Uri
-
-            val myFile = uriToFile(selectedImg, this@AddStoryActivity)
-
-            getFile = myFile
-
-            binding.previewImage.setImageURI(selectedImg)
+    ) {
+        if(it.resultCode == RESULT_OK){
+            val imageResult = uriToFile(this, it.data?.data as Uri)
+            getFile = imageResult
+            binding.previewImage.setImageURI(it.data?.data)
         }
     }
 
@@ -179,6 +172,13 @@ class AddStoryActivity : AppCompatActivity() {
 
             binding.previewImage.setImageBitmap(result)
         }
+    }
+
+    companion object {
+        const val CAMERA_X_RESULT = 200
+
+        private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+        private const val REQUEST_CODE_PERMISSIONS = 10
     }
 
 

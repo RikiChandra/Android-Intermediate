@@ -9,6 +9,8 @@ import com.example.sharingapp.responses.StoryResponses
 import com.example.sharingapp.setting.SettingEvent
 import com.example.sharingapp.setting.SharedPreference
 import com.google.gson.Gson
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
@@ -29,71 +31,57 @@ class StoryViewModel(private val preference: SharedPreference): ViewModel() {
         get() = postError
 
 
-
-    fun post(
+    fun store(
         onSuccessCallback: OnSuccessCallback<AddResponse>,
         description: String,
-        photo : File,
+        photo: File,
         lat: Float?,
         lon: Float?
-    ){
-        val token = preference.ambilToken()
-
+    ) {
         _isLoading.postValue(true)
 
-        val descriptionPart = description.toRequestBody("text/plain".toMediaType())
-        val photoPart = MultipartBody.Part.createFormData(
-            "photo",
-            photo.name,
-            photo.asRequestBody("image/jpeg".toMediaType())
-        )
-        val latPart = lat?.toString()?.toRequestBody("text/plain".toMediaType())
-        val lonPart = lon?.toString()?.toRequestBody("text/plain".toMediaType())
+        var token: String
 
-        ApiConfig.getApiService().storeStory("Bearer $token",
-            description = descriptionPart,
-            photo = photoPart,
-            lat = latPart,
-            lon = lonPart
-        ).enqueue(object : Callback<AddResponse>{
-            override fun onResponse(
-                call: retrofit2.Call<AddResponse>,
-                response: retrofit2.Response<AddResponse>
-            ) {
-                _isLoading.postValue(false)
+        runBlocking {
+            token = preference.ambilToken().first()
+        }
+
+        ApiConfig.getApiService().storeStory(
+            authorization = "Bearer $token",
+            description = description.toRequestBody("text/plain".toMediaType()),
+            photo = MultipartBody.Part.createFormData(
+                "photo",
+                photo.name,
+                photo.asRequestBody("image/*".toMediaType())
+            ),
+            lat = lat?.toString()?.toRequestBody("text/plain".toMediaType()),
+            lon = lon?.toString()?.toRequestBody("text/plain".toMediaType())
+        ).enqueue(object : Callback<AddResponse> {
+            override fun onResponse(call: Call<AddResponse>, response: Response<AddResponse>) {
                 if (response.isSuccessful){
                     response.body()?.let {
-                        if (it.error as Boolean){
-                            postError.value = SettingEvent(it.message as String)
-                        } else{
+                        if(it.error as Boolean){
+                            postError.postValue(SettingEvent(it.message as String))
+                        } else {
                             onSuccessCallback.onSuccess(response.body()!!)
                         }
                     } ?: run {
-                        postError.value = SettingEvent("Terjadi kesalahan")
+                        postError.postValue(SettingEvent("Something went wrong"))
                     }
-                } else{
-                    val body: AddResponse?= Gson().fromJson(response.errorBody()?.string(), AddResponse::class.java)
-                    postError.value = SettingEvent(body?.message as String)
+                } else {
+                    val body: AddResponse? = Gson().fromJson(response.errorBody()?.charStream(), AddResponse::class.java)
+                    postError.postValue(SettingEvent(body?.message as String))
                 }
             }
 
-            override fun onFailure(call: retrofit2.Call<AddResponse>, t: Throwable) {
+            override fun onFailure(call: Call<AddResponse>, t: Throwable) {
                 _isLoading.postValue(false)
-                postError.value = SettingEvent(t.message.toString())
+                postError.postValue(SettingEvent(t.message as String))
             }
 
-        }
-
-        )
+        })
 
     }
-
-
-
-
-
-
-
 
 }
 
