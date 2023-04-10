@@ -3,12 +3,14 @@ package com.example.sharingapp.view.story
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.sharingapp.api.ApiConfig
 import com.example.sharingapp.responses.AddResponse
 import com.example.sharingapp.setting.SettingEvent
 import com.example.sharingapp.setting.SharedPreference
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -37,49 +39,45 @@ class StoryViewModel(private val preference: SharedPreference): ViewModel() {
         lat: Float?,
         lon: Float?
     ) {
-        _isLoading.postValue(true)
+        viewModelScope.launch {
+            _isLoading.postValue(true)
 
-        var token: String
+            val token = preference.ambilToken().first()
 
-        runBlocking {
-            token = preference.ambilToken().first()
-        }
-
-        ApiConfig.getApiService().storeStory(
-            authorization = "Bearer $token",
-            description = description.toRequestBody("text/plain".toMediaType()),
-            photo = MultipartBody.Part.createFormData(
-                "photo",
-                photo.name,
-                photo.asRequestBody("image/*".toMediaType())
-            ),
-            lat = lat?.toString()?.toRequestBody("text/plain".toMediaType()),
-            lon = lon?.toString()?.toRequestBody("text/plain".toMediaType())
-        ).enqueue(object : Callback<AddResponse> {
-            override fun onResponse(call: Call<AddResponse>, response: Response<AddResponse>) {
-                if (response.isSuccessful){
-                    response.body()?.let {
-                        if(it.error as Boolean){
-                            postError.postValue(SettingEvent(it.message as String))
-                        } else {
-                            onSuccessCallback.onSuccess(response.body()!!)
+            ApiConfig.getApiService().storeStory(
+                authorization = "Bearer $token",
+                description = description.toRequestBody("text/plain".toMediaType()),
+                photo = MultipartBody.Part.createFormData(
+                    "photo",
+                    photo.name,
+                    photo.asRequestBody("image/*".toMediaType())
+                ),
+                lat = lat?.toString()?.toRequestBody("text/plain".toMediaType()),
+                lon = lon?.toString()?.toRequestBody("text/plain".toMediaType())
+            ).enqueue(object : Callback<AddResponse> {
+                override fun onResponse(call: Call<AddResponse>, response: Response<AddResponse>) {
+                    if (response.isSuccessful){
+                        response.body()?.let {
+                            if(it.error as Boolean){
+                                postError.postValue(SettingEvent(it.message as String))
+                            } else {
+                                onSuccessCallback.onSuccess(response.body()!!)
+                            }
+                        } ?: run {
+                            postError.postValue(SettingEvent("Something went wrong"))
                         }
-                    } ?: run {
-                        postError.postValue(SettingEvent("Something went wrong"))
+                    } else {
+                        val body: AddResponse? = Gson().fromJson(response.errorBody()?.charStream(), AddResponse::class.java)
+                        postError.postValue(SettingEvent(body?.message as String))
                     }
-                } else {
-                    val body: AddResponse? = Gson().fromJson(response.errorBody()?.charStream(), AddResponse::class.java)
-                    postError.postValue(SettingEvent(body?.message as String))
                 }
-            }
 
-            override fun onFailure(call: Call<AddResponse>, t: Throwable) {
-                _isLoading.postValue(false)
-                postError.postValue(SettingEvent(t.message as String))
-            }
-
-        })
-
+                override fun onFailure(call: Call<AddResponse>, t: Throwable) {
+                    _isLoading.postValue(false)
+                    postError.postValue(SettingEvent(t.message as String))
+                }
+            })
+        }
     }
 
 }

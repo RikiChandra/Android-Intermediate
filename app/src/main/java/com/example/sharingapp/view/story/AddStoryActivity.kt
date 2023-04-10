@@ -89,9 +89,10 @@ class AddStoryActivity : AppCompatActivity() {
         }
 
         binding.postButton.setOnClickListener {
-            if (getFile != null && !TextUtils.isEmpty((binding.descriptionEditText.text.toString()))){
-                val comperssedFile = reduceFileImage(getFile!!)
-
+            val description = binding.descriptionEditText.text.toString()
+            val file = getFile
+            if (file != null && description.isNotEmpty()) {
+                val compressedFile = reduceFileImage(file)
                 viewModel.store(
                     object : OnSuccessCallback<AddResponse> {
                         override fun onSuccess(message: AddResponse) {
@@ -99,32 +100,28 @@ class AddStoryActivity : AppCompatActivity() {
                             setResult(MainActivity.INTENT_ADD_STORY)
                             finish()
                         }
-
                     },
-                    binding.descriptionEditText.text.toString(),
-                    comperssedFile,
-                    lat = null,
-                    lon = null
+                    description,
+                    compressedFile,
+                    null,
+                    null
                 )
-
             } else {
                 Toast.makeText(this, getString(R.string.fillField), Toast.LENGTH_SHORT).show()
             }
-
         }
 
 
 
 
+
         viewModel.isLoading.observe(this) {
-           isLoading ->
-            binding.apply {
-                loading.visibility = if (isLoading) View.VISIBLE else View.GONE
-                cameraButton.isEnabled = !isLoading
-                galleryButton.isEnabled = !isLoading
-                postButton.isEnabled = !isLoading
-                descriptionEditText.isEnabled = !isLoading
-            }
+           loadings ->
+            binding.loading.visibility = if (loadings) View.VISIBLE else View.GONE
+            binding.cameraButton.isEnabled = !loadings
+            binding.galleryButton.isEnabled = !loadings
+            binding.postButton.isEnabled = !loadings
+            binding.descriptionEditText.isEnabled = !loadings
         }
 
         viewModel.error.observe(this) {

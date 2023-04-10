@@ -1,10 +1,16 @@
 package com.example.sharingapp.auth
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.WindowInsets
+import android.view.WindowManager
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.datastore.core.DataStore
@@ -62,13 +68,11 @@ class LoginActivity : AppCompatActivity() {
 
 
         viewModel.isLoading.observe(this) {
-            loadings : Boolean ->
-            binding.apply {
-                loading.visibility = if (loadings) View.VISIBLE else View.GONE
-                loginButton.isEnabled = !loadings
-                email.isEnabled = !loadings
-                password.isEnabled = !loadings
-            }
+            loadings ->
+            binding.loading.visibility = if (loadings) View.VISIBLE else View.GONE
+            binding.email.isEnabled = !loadings
+            binding.password.isEnabled = !loadings
+            binding.loginButton.isEnabled = !loadings
         }
 
         viewModel.isLogged.observe(this) { isLogged ->
@@ -86,9 +90,40 @@ class LoginActivity : AppCompatActivity() {
         }
 
 
-
+        playAnimation()
 
     }
+
+    private fun playAnimation() {
+        ObjectAnimator.ofFloat(binding.logo, View.TRANSLATION_X, -30f, 30f).apply {
+            duration = 6000
+            repeatCount = ObjectAnimator.INFINITE
+            repeatMode = ObjectAnimator.REVERSE
+        }.start()
+
+        val emailEditText = ObjectAnimator.ofFloat(binding.email, View.TRANSLATION_X, -500f, 0f).apply {
+            duration = 2000
+            interpolator = AccelerateDecelerateInterpolator()
+        }
+
+        val passwordEditText = ObjectAnimator.ofFloat(binding.password, View.TRANSLATION_X, -500f, 0f).apply {
+            duration = 2000
+            interpolator = AccelerateDecelerateInterpolator()
+        }
+
+        // Animasi pada login Button
+        val loginButton = ObjectAnimator.ofFloat(binding.loginButton, View.ALPHA, 0f, 1f)
+        loginButton.duration = 2000
+
+        AnimatorSet().apply {
+            playTogether(emailEditText, passwordEditText, loginButton)
+            startDelay = 500
+        }.start()
+
+    }
+
+
+
 
     private fun hideKeyboard(){
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

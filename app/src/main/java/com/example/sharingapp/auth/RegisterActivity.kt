@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Patterns
 import android.view.View
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -79,13 +78,8 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.isLoading.observe(this) {
-            isLoading ->
-            if (isLoading) {
-                binding.loading.visibility = View.VISIBLE
-            } else {
-                binding.loading.visibility = View.GONE
-            }
+        viewModel.isLoading.observe(this) { isLoading ->
+            binding.loading.visibility = if (isLoading) View.VISIBLE else View.GONE
             binding.buttonRegister.isEnabled = !isLoading
             binding.editTextName.isEnabled = !isLoading
             binding.editTextEmail.isEnabled = !isLoading
