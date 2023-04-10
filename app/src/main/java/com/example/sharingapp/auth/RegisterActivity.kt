@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Patterns
 import android.view.View
-import android.widget.Toast
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -41,27 +40,15 @@ class RegisterActivity : AppCompatActivity() {
             val email = binding.editTextEmail.text.toString()
             val password = binding.editTextPassword.text.toString()
 
-            if (name.isEmpty()) {
-                binding.textNameLayout.error = getString(R.string.error_nama)
+            if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+                binding.editTextName.error = getString(R.string.error_nama)
+                binding.editTextName.requestFocus()
+                binding.editTextEmail.error = getString(R.string.error_email)
+                binding.editTextEmail.requestFocus()
+                binding.editTextPassword.error = getString(R.string.password)
+                binding.editTextPassword.requestFocus()
                 return@setOnClickListener
-            } else {
-                binding.textNameLayout.error = null
             }
-
-            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                binding.textEmailLayout.error = getString(R.string.error_email)
-                return@setOnClickListener
-            } else {
-                binding.textEmailLayout.error = null
-            }
-
-            if (password.length < 8) {
-                binding.textPasswordLayout.error = getString(R.string.error)
-                return@setOnClickListener
-            } else {
-                binding.textPasswordLayout.error = null
-            }
-
 
             viewModel.register(name, email, password)
         }
@@ -99,6 +86,10 @@ class RegisterActivity : AppCompatActivity() {
             } else {
                 binding.loading.visibility = View.GONE
             }
+            binding.buttonRegister.isEnabled = !isLoading
+            binding.editTextName.isEnabled = !isLoading
+            binding.editTextEmail.isEnabled = !isLoading
+            binding.editTextPassword.isEnabled = !isLoading
         }
 
 

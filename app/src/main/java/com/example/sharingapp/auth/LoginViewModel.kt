@@ -7,12 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.sharingapp.api.ApiConfig
-import com.example.sharingapp.responses.LoginResponses
 import com.example.sharingapp.setting.SharedPreference
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.awaitResponse
 
 class LoginViewModel(private val preference: SharedPreference) : ViewModel() {

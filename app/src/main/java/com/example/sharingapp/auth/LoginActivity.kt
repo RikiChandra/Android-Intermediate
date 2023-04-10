@@ -42,6 +42,8 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.password.text.toString().trim()
 
             if (username.isEmpty() || password.isEmpty()){
+                binding.email.error = getString(R.string.emptyField)
+                binding.password.error = getString(R.string.emptyField)
                 Toast.makeText(this, getString(R.string.emptyField), Toast.LENGTH_SHORT).show()
                 return@setOnClickListener // Menghentikan eksekusi kode di sini jika username atau password kosong
             }
@@ -64,6 +66,8 @@ class LoginActivity : AppCompatActivity() {
             binding.apply {
                 loading.visibility = if (loadings) View.VISIBLE else View.GONE
                 loginButton.isEnabled = !loadings
+                email.isEnabled = !loadings
+                password.isEnabled = !loadings
             }
         }
 
