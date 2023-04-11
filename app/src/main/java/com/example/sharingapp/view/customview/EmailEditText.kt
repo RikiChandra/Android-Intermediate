@@ -41,6 +41,8 @@ class EmailEditText : AppCompatEditText, OnTouchListener {
         textAlignment = View.TEXT_ALIGNMENT_VIEW_START
     }
 
+
+
     private fun init() {
         // Menginisialisasi gambar clear button
         clearButtonImage = ContextCompat.getDrawable(context, R.drawable.baseline_close_24) as Drawable

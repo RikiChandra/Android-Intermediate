@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Patterns
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
@@ -47,16 +48,17 @@ class LoginActivity : AppCompatActivity() {
             val username = binding.email.text.toString().trim()
             val password = binding.password.text.toString().trim()
 
-            if (username.isEmpty() || password.isEmpty()){
+            if (username.isEmpty() || password.isEmpty() || password.length < 8) {
                 binding.email.error = getString(R.string.emptyField)
                 binding.password.error = getString(R.string.emptyField)
                 Toast.makeText(this, getString(R.string.emptyField), Toast.LENGTH_SHORT).show()
-                return@setOnClickListener // Menghentikan eksekusi kode di sini jika username atau password kosong
+                return@setOnClickListener
             }
 
             viewModel.login(username, password)
             hideKeyboard()
         }
+
 
 
 

@@ -19,6 +19,7 @@ class PasswordEditText : AppCompatEditText, OnTouchListener {
     private lateinit var eyeButtonImage: Drawable
     private lateinit var eyeOffButtonImage: Drawable
 
+
     constructor(context: Context) : super(context) {
         init()
     }

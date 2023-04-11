@@ -39,11 +39,19 @@ class RegisterActivity : AppCompatActivity() {
             val email = binding.editTextEmail.text.toString()
             val password = binding.editTextPassword.text.toString()
 
-            if (name.isEmpty() || email.isEmpty() || password.isEmpty()) {
+            if (name.isEmpty()) {
                 binding.editTextName.error = getString(R.string.error_nama)
                 binding.editTextName.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (email.isEmpty()) {
                 binding.editTextEmail.error = getString(R.string.error_email)
                 binding.editTextEmail.requestFocus()
+                return@setOnClickListener
+            }
+
+            if (password.isEmpty() || password.length < 8) {
                 binding.editTextPassword.error = getString(R.string.password)
                 binding.editTextPassword.requestFocus()
                 return@setOnClickListener
@@ -51,6 +59,7 @@ class RegisterActivity : AppCompatActivity() {
 
             viewModel.register(name, email, password)
         }
+
 
 
 
