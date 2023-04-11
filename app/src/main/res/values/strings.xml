@@ -51,5 +51,6 @@
     <string name="add_widget">Add Widget</string>
     <string name="app_widget_description">This is the app widget description</string>
     <string name="empty_text">Empty Text</string>
-
+    <string name="splash">Dicoding Academy</string>
+    <string name="switch_camera">Switch Camera</string>
 </resources>

@@ -12,6 +12,7 @@
         android:layout_height="280dp"
         app:srcCompat="@drawable/regs"
         android:layout_alignParentTop="true"
+        android:contentDescription="@string/register"
         />
 
     <androidx.cardview.widget.CardView
@@ -45,7 +46,6 @@
                 android:padding="16dp"
                 android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Subtitle1"
                 android:background="@drawable/edittext_background"
-                android:layout_below="@+id/logo"
                 android:gravity="center"
                 android:textAlignment="center"/>
 
@@ -58,7 +58,6 @@
                 android:padding="16dp"
                 android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Subtitle1"
                 android:background="@drawable/edittext_background"
-                android:layout_below="@+id/logo"
                 android:gravity="center"
                 android:textAlignment="center"/>
 
@@ -66,8 +65,6 @@
                 android:id="@+id/editTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/editTextEmail"
-                endiconmode="password_toggle"
                 android:layout_marginTop="10dp"
                 android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Subtitle1"
                 android:padding="16dp"
