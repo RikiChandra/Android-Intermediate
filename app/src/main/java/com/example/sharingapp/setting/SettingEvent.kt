@@ -14,8 +14,4 @@ class SettingEvent<out T>(private val data: T){
             data
         }
     }
-
-    fun peekContent(): T = data
-
-
 }
