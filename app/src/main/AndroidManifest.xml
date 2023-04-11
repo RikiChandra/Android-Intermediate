@@ -21,6 +21,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SharingApp"
         tools:targetApi="31">
+        <receiver
+            android:name=".widget.WidgetStory"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_story_info" />
+        </receiver>
+        <service android:name=".widget.WidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+
         <activity
             android:name=".camera.CameraXActivity"
             android:exported="false" />

@@ -37,24 +37,6 @@
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                android:id="@+id/textNameLayout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="16dp"-->
-<!--                android:hint="@string/name"-->
-<!--                app:hintTextAppearance="@style/TextAppearance.MdcTypographyStyles.Subtitle1"-->
-<!--                app:hintEnabled="true">-->
-
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/editTextName"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Subtitle1"-->
-<!--                    android:inputType="textPersonName" />-->
-
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
-
             <com.example.sharingapp.view.customview.NameEditText
                 android:id="@+id/editTextName"
                 android:layout_width="match_parent"
@@ -67,23 +49,7 @@
                 android:gravity="center"
                 android:textAlignment="center"/>
 
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                android:id="@+id/textEmailLayout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="16dp"-->
-<!--                android:hint="@string/email"-->
-<!--                app:hintTextAppearance="@style/TextAppearance.MdcTypographyStyles.Subtitle1"-->
-<!--                app:hintEnabled="true">-->
 
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/editTextEmail"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Subtitle1"-->
-<!--                    android:inputType="textEmailAddress" />-->
-
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
             <com.example.sharingapp.view.customview.EmailEditText
                 android:id="@+id/editTextEmail"
                 android:layout_width="match_parent"
@@ -95,25 +61,6 @@
                 android:layout_below="@+id/logo"
                 android:gravity="center"
                 android:textAlignment="center"/>
-
-<!--            <com.google.android.material.textfield.TextInputLayout-->
-<!--                android:id="@+id/textPasswordLayout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginTop="16dp"-->
-<!--                app:hintTextAppearance="@style/TextAppearance.MdcTypographyStyles.Subtitle1"-->
-<!--                android:hint="@string/password"-->
-<!--                app:endIconMode="password_toggle"-->
-<!--                app:hintEnabled="true">-->
-
-<!--                <com.google.android.material.textfield.TextInputEditText-->
-<!--                    android:id="@+id/editTextPassword"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:textAppearance="@style/TextAppearance.MdcTypographyStyles.Subtitle1"-->
-<!--                    android:inputType="textPassword" />-->
-
-<!--            </com.google.android.material.textfield.TextInputLayout>-->
 
             <com.example.sharingapp.view.customview.PasswordEditText
                 android:id="@+id/editTextPassword"
@@ -148,9 +95,6 @@
             />
 
     </androidx.cardview.widget.CardView>
-
-
-
 
 </RelativeLayout>
 
