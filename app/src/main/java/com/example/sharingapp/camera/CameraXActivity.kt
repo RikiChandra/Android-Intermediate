@@ -1,6 +1,9 @@
 package com.example.sharingapp.camera
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,6 +20,7 @@ import androidx.core.content.ContextCompat
 import com.example.sharingapp.R
 import com.example.sharingapp.setting.createFile
 import com.example.sharingapp.view.story.AddStoryActivity
+import java.io.FileOutputStream
 
 class CameraXActivity : AppCompatActivity() {
 
@@ -48,6 +52,15 @@ class CameraXActivity : AppCompatActivity() {
         startCamera()
     }
 
+    private fun getImageRotation(cameraSelector: CameraSelector): Float {
+        return when (cameraSelector) {
+            CameraSelector.DEFAULT_FRONT_CAMERA -> 270F
+            CameraSelector.DEFAULT_BACK_CAMERA -> 90F
+            else -> 0F
+        }
+    }
+
+
 
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
@@ -68,15 +81,23 @@ class CameraXActivity : AppCompatActivity() {
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
+                    val imagePath = photoFile.absolutePath
+                    val bitmap = BitmapFactory.decodeFile(imagePath)
+                    val matrix = Matrix()
+                    matrix.postRotate(getImageRotation(cameraSelector))
+                    val rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+                    val rotatedOutputStream = FileOutputStream(photoFile.path)
+                    rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, rotatedOutputStream)
+                    rotatedOutputStream.close()
+                    bitmap.recycle()
+                    rotatedBitmap.recycle()
                     val intent = Intent()
                     intent.putExtra("picture", photoFile)
-                    intent.putExtra(
-                        "isBackCamera",
-                        cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA
-                    )
+                    intent.putExtra("isBackCamera", cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
                     setResult(AddStoryActivity.CAMERA_X_RESULT, intent)
                     finish()
                 }
+
             }
         )
     }

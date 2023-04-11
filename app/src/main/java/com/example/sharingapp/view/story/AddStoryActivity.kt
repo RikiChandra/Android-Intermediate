@@ -4,7 +4,10 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -160,14 +163,20 @@ class AddStoryActivity : AppCompatActivity() {
             val isBackCamera = it.data?.getBooleanExtra("isBackCamera", true) as Boolean
 
             getFile = myFile
-            val result = rotateBitmap(
-                BitmapFactory.decodeFile(getFile?.path),
-                isBackCamera
-            )
+            val result = rotateBitmap(BitmapFactory.decodeFile(getFile?.path), isBackCamera)
 
-            binding.previewImage.setImageBitmap(result)
+            val matrix = Matrix()
+            matrix.postRotate(if (isBackCamera) 270f else 270f)
+            val rotatedResult = Bitmap.createBitmap(result, 0, 0, result.width, result.height, matrix, true)
+            binding.previewImage.setImageBitmap(rotatedResult)
+
+            result.recycle()
         }
     }
+
+
+
+
 
     companion object {
         const val CAMERA_X_RESULT = 200
