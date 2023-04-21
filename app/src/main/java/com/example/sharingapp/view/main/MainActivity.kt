@@ -57,11 +57,13 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.stories.observe(this) { stories ->
             stories?.let {
-                storyAdapter.submitData(lifecycle, it)
-                binding.datas.layoutManager?.scrollToPosition(0)
-                storyAdapter.notifyDataSetChanged()
+                storyAdapter.submitData(lifecycle, stories)
+                binding.datas.postDelayed({
+                    binding.datas.layoutManager?.scrollToPosition(0)
+                }, 500) // tambahkan penundaan selama 500ms
             }
         }
+
 
         viewModel.error.observe(this) { event ->
             event.getContentIfNotHandled()?.let { message ->
@@ -107,7 +109,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun refreshData(){
         storyAdapter.refresh()
-        storyAdapter.notifyDataSetChanged()
     }
 
 
