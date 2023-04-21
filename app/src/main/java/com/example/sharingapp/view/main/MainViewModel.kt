@@ -4,7 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.sharingapp.api.ApiConfig
+import com.example.sharingapp.data.StoryRepository
+import com.example.sharingapp.responses.Story
 import com.example.sharingapp.responses.StoryResponses
 import com.example.sharingapp.setting.SettingEvent
 import com.example.sharingapp.setting.SharedPreference
@@ -13,11 +17,9 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainViewModel(private val preference: SharedPreference) : ViewModel() {
+class MainViewModel(private val preference: SharedPreference, private val storyRepository: StoryRepository) : ViewModel() {
 
-    private val storyData = MutableLiveData<StoryResponses>()
-    val story: LiveData<StoryResponses>
-        get() = storyData
+
 
 
     private val storyError = MutableLiveData<SettingEvent<String>>()
@@ -48,25 +50,10 @@ class MainViewModel(private val preference: SharedPreference) : ViewModel() {
     }
 
 
-    fun getStories(page: Int?, size: Int?, location: Int?) {
-        viewModelScope.launch {
-            _isLoading.postValue(true)
-            val token = preference.ambilToken().first()
-            val response = withContext(Dispatchers.IO) {
-                ApiConfig.getApiService().getStories("Bearer $token", page, size, location)
-                    .execute()
-            }
-            if (response.isSuccessful) {
-                response.body()?.let { storyData.postValue(it) }
-            } else {
-                storyError.postValue(
-                    SettingEvent(
-                        response.errorBody()?.string() ?: "Unknown error"
-                    )
-                )
-            }
-            _isLoading.postValue(false)
-        }
-    }
+    val stories : LiveData<PagingData<Story>> =
+        storyRepository.getStory().cachedIn(viewModelScope)
+
+
+
 
 }

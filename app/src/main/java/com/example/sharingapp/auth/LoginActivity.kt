@@ -16,6 +16,8 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.example.sharingapp.view.main.MainActivity
 import com.example.sharingapp.R
+import com.example.sharingapp.api.ApiConfig
+import com.example.sharingapp.api.ApiService
 import com.example.sharingapp.databinding.ActivityLoginBinding
 import com.example.sharingapp.setting.SharedPreference
 import com.example.sharingapp.setting.ViewModelFactory
@@ -37,7 +39,7 @@ class LoginActivity : AppCompatActivity() {
         supportActionBar?.hide()
 
 
-        viewModel = ViewModelProvider(this, ViewModelFactory(SharedPreference.getInstance(dataStore), this))[LoginViewModel::class.java]
+        viewModel = ViewModelProvider(this, ViewModelFactory(SharedPreference.getInstance(dataStore), ApiConfig.getApiService()))[LoginViewModel::class.java]
 
 
         binding.loginButton.setOnClickListener {

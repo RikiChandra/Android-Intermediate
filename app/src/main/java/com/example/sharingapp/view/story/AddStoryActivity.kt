@@ -21,6 +21,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.example.sharingapp.R
+import com.example.sharingapp.api.ApiConfig
 import com.example.sharingapp.camera.CameraXActivity
 import com.example.sharingapp.databinding.ActivityAddStoryBinding
 import com.example.sharingapp.responses.AddResponse
@@ -67,7 +68,7 @@ class AddStoryActivity : AppCompatActivity() {
 
         val preference = SharedPreference.getInstance(dataStore)
         viewModel =
-            ViewModelProvider(this, ViewModelFactory(preference, this))[StoryViewModel::class.java]
+            ViewModelProvider(this, ViewModelFactory(preference, ApiConfig.getApiService()))[StoryViewModel::class.java]
 
         if (!allPermissionsGranted()) {
             ActivityCompat.requestPermissions(

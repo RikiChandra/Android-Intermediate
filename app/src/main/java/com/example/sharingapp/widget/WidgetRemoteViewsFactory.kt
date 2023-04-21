@@ -39,14 +39,14 @@ class WidgetRemoteViewsFactory(private val context: Context, private val intent:
             sharedPreferences.ambilToken().first()
         }
 
-        if (token.isNotEmpty()) {
-            val call = apiService.getStories("Bearer $token", 1, 10, null)
-            val response = call.execute()
-
-            if (response.isSuccessful) {
-                items = (response.body()?.listStory ?: emptyList()) as List<Story>
-            }
-        }
+//        if (token.isNotEmpty()) {
+//            val call = apiService.getStories("Bearer $token", 1, 10, null)
+//            val response = call.execute()
+//
+//            if (response.isSuccessful) {
+//                items = (response.body()?.listStory ?: emptyList()) as List<Story>
+//            }
+//        }
     }
 
     override fun onDestroy() {}

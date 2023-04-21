@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +18,7 @@ import com.example.sharingapp.responses.Story
 import com.example.sharingapp.setting.formatElapsedTime
 import com.example.sharingapp.view.detail.DetailActivity
 
-class StoryAdapter(private val context: Context) : ListAdapter<Story, StoryAdapter.ViewHolder>(
+class StoryAdapter(private val context: Context) : PagingDataAdapter<Story, StoryAdapter.ViewHolder>(
     DIFF_CALLBACK
 ) {
 
@@ -39,38 +40,43 @@ class StoryAdapter(private val context: Context) : ListAdapter<Story, StoryAdapt
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val story = getItem(holder.adapterPosition)
+        val story = getItem(position)
         val context = holder.itemView.context
 
-        holder.binding.title.text = story.name
-        holder.binding.createdAt.text = formatElapsedTime(story.createdAt, context)
+        story?.let {
+            holder.binding.title.text = story.name
+            holder.binding.createdAt.text = formatElapsedTime(story.createdAt, context)
 
 
-        Glide.with(holder.itemView.context)
-            .load(story.photoUrl)
-            .into(holder.binding.img)
+            Glide.with(holder.itemView.context)
+                .load(story.photoUrl)
+                .into(holder.binding.img)
 
-        holder.itemView.setOnClickListener {
-            val intent = Intent(context, DetailActivity::class.java)
-            intent.putExtra("story", story)
+            holder.itemView.setOnClickListener {
+                val intent = Intent(context, DetailActivity::class.java)
+                intent.putExtra("story", story)
 
-            val optionCompat : ActivityOptionsCompat =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    holder.itemView.context as Activity,
-                    Pair(
-                        holder.binding.img,
-                        context.getString(R.string.transitionImage)),
+                val optionCompat : ActivityOptionsCompat =
+                    ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        holder.itemView.context as Activity,
+                        Pair(
+                            holder.binding.img,
+                            context.getString(R.string.transitionImage)),
 
-                    Pair(holder.binding.title,
-                        context.getString(R.string.name)),
+                        Pair(holder.binding.title,
+                            context.getString(R.string.name)),
 
-                    Pair(holder.binding.createdAt,
-                        context.getString(R.string.createdAt)),
-                )
+                        Pair(holder.binding.createdAt,
+                            context.getString(R.string.createdAt)),
+                    )
 
 
-            context.startActivity(intent, optionCompat.toBundle())
+                context.startActivity(intent, optionCompat.toBundle())
+            }
+
         }
+
+
 
 
 

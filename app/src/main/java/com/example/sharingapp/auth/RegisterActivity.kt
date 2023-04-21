@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import com.example.sharingapp.R
+import com.example.sharingapp.api.ApiConfig
 import com.example.sharingapp.databinding.ActivityRegisterBinding
 import com.example.sharingapp.setting.SharedPreference
 import com.example.sharingapp.setting.ViewModelFactory
@@ -31,7 +32,7 @@ class RegisterActivity : AppCompatActivity() {
 
 
         val pref = SharedPreference.getInstance(dataStore)
-        val viewModel = ViewModelProvider(this, ViewModelFactory(pref, this@RegisterActivity))[RegisterViewModel::class.java]
+        val viewModel = ViewModelProvider(this, ViewModelFactory(pref, ApiConfig.getApiService()))[RegisterViewModel::class.java]
 
 
         binding.buttonRegister.setOnClickListener {

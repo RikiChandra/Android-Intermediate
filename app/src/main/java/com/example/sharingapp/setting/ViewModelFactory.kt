@@ -3,13 +3,16 @@ package com.example.sharingapp.setting
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.sharingapp.api.ApiService
 import com.example.sharingapp.view.main.MainViewModel
 import com.example.sharingapp.auth.LoginViewModel
 import com.example.sharingapp.auth.RegisterViewModel
+import com.example.sharingapp.data.StoryRepository
 import com.example.sharingapp.view.story.StoryViewModel
 
-class ViewModelFactory(private val preference: SharedPreference, private val context: Context) : ViewModelProvider.Factory {
+class ViewModelFactory(private val preference: SharedPreference, private val apiService: ApiService) : ViewModelProvider.Factory {
 
+    private val storyRepository = StoryRepository(preference, apiService)
 
 
     @Suppress("UNCHECKED_CAST")
@@ -19,7 +22,7 @@ class ViewModelFactory(private val preference: SharedPreference, private val con
                 LoginViewModel(preference) as T
             }
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
-                MainViewModel(preference) as T
+                MainViewModel(preference, storyRepository) as T
             }
             modelClass.isAssignableFrom(RegisterViewModel::class.java) -> {
                 RegisterViewModel(preference) as T

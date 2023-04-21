@@ -54,4 +54,5 @@
     <string name="empty_text">Teks Kosong</string>
     <string name="splash">Dicoding Academy</string>
     <string name="switch_camera">Ganti Camera</string>
+    <string name="retry">Try Again</string>
 </resources>

@@ -73,4 +73,14 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:${camerax_version}"
     implementation "androidx.camera:camera-view:${camerax_version}"
 
+    //paging
+    implementation "androidx.paging:paging-runtime-ktx:3.1.1"
+
+    //room
+    implementation 'androidx.room:room-paging:2.4.2'
+    implementation 'androidx.room:room-ktx:2.4.3'
+    kapt 'androidx.room:room-compiler:2.4.3'
+
+
+
 }

@@ -22,7 +22,11 @@ import com.example.sharingapp.setting.ViewModelFactory
 import com.example.sharingapp.view.story.AddStoryActivity
 import com.example.sharingapp.view.story.StoryAdapter
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import androidx.lifecycle.asLiveData
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.sharingapp.api.ApiConfig
+import com.example.sharingapp.data.LoadingStateAdapter
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 class MainActivity : AppCompatActivity() {
@@ -38,25 +42,26 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
+
+
+        val preference = SharedPreference.getInstance(dataStore)
+        viewModel = ViewModelProvider(this, ViewModelFactory(preference, ApiConfig.getApiService()))[MainViewModel::class.java]
+
         if (resources.configuration.orientation == ORIENTATION_LANDSCAPE) {
             binding.datas.layoutManager = GridLayoutManager(this, 2)
         } else {
             binding.datas.layoutManager = LinearLayoutManager(this)
         }
 
-        val preference = SharedPreference.getInstance(dataStore)
-        viewModel = ViewModelProvider(this, ViewModelFactory(preference, this))[MainViewModel::class.java]
-
         binding.datas.adapter = storyAdapter
 
-        viewModel.story.observe(this) { stories ->
+        viewModel.stories.observe(this) { stories ->
             stories?.let {
-                storyAdapter.submitList(it.listStory)
+                storyAdapter.submitData(lifecycle, it)
+                binding.datas.layoutManager?.scrollToPosition(0)
+                storyAdapter.notifyDataSetChanged()
             }
         }
-
-        viewModel.getStories(null, null, null)
-
 
         viewModel.error.observe(this) { event ->
             event.getContentIfNotHandled()?.let { message ->
@@ -64,18 +69,16 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         binding.swipe.setOnRefreshListener {
-            viewModel.getStories(null, null, null)
-            binding.swipe.isRefreshing = false
+            refreshData()
         }
 
-        viewModel.isLoading.observe(this) {
-            binding.swipe.isRefreshing = it
+        storyAdapter.loadStateFlow.asLiveData().observe(this) {
+            binding.swipe.isRefreshing = it.source.refresh is LoadState.Loading
         }
 
         addActivity()
-
+        setData()
 
     }
 
@@ -88,10 +91,24 @@ class MainActivity : AppCompatActivity() {
     private val storyIntent =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == INTENT_ADD_STORY) {
-                storyAdapter.submitList(listOf())
-                viewModel.getStories(null, null, null)
+                refreshData()
             }
         }
+
+
+    private fun setData(){
+        binding.datas.adapter = storyAdapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                storyAdapter.retry()
+            }
+        )
+
+    }
+
+    private fun refreshData(){
+        storyAdapter.refresh()
+        storyAdapter.notifyDataSetChanged()
+    }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
