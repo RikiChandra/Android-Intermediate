@@ -55,11 +55,9 @@ class MainActivity : AppCompatActivity() {
 
         binding.datas.adapter = storyAdapter
 
-        viewModel.stories.observe(this) { stories ->
-            stories?.let {
-                storyAdapter.submitData(lifecycle, stories)
-                binding.datas.layoutManager?.scrollToPosition(0)
-            }
+        viewModel.stories.observe(this) {
+            storyAdapter.submitData(lifecycle, it)
+            binding.datas.layoutManager?.scrollToPosition(0)
         }
 
 
@@ -91,6 +89,10 @@ class MainActivity : AppCompatActivity() {
     private val storyIntent =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == INTENT_ADD_STORY) {
+                val intent = Intent(this, MainActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(intent)
+                finish()
                 refreshData()
             }
         }
@@ -102,6 +104,8 @@ class MainActivity : AppCompatActivity() {
                 storyAdapter.retry()
             }
         )
+
+        refreshData()
 
     }
 

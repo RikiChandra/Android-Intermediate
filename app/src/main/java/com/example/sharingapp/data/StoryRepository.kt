@@ -13,7 +13,7 @@ class StoryRepository(private val sharedPreference: SharedPreference, private va
 
     fun getStory(): LiveData<PagingData<Story>>{
         return Pager(
-            config = PagingConfig(pageSize = 5, prefetchDistance = 2, initialLoadSize = 5),
+            config = PagingConfig(pageSize = 5),
                 pagingSourceFactory = { StoryPagingSource(apiService,sharedPreference) }
         ).liveData
 
