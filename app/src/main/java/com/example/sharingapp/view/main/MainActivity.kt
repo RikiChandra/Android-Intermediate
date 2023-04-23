@@ -58,9 +58,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.stories.observe(this) { stories ->
             stories?.let {
                 storyAdapter.submitData(lifecycle, stories)
-                binding.datas.postDelayed({
-                    binding.datas.layoutManager?.scrollToPosition(0)
-                }, 500) // tambahkan penundaan selama 500ms
+                binding.datas.layoutManager?.scrollToPosition(0)
             }
         }
 
@@ -72,11 +70,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.swipe.setOnRefreshListener {
-            refreshData()
+            storyAdapter.refresh()
         }
 
         storyAdapter.loadStateFlow.asLiveData().observe(this) {
-            binding.swipe.isRefreshing = it.source.refresh is LoadState.Loading
+            binding.swipe.isRefreshing = it.refresh is LoadState.Loading
         }
 
         addActivity()

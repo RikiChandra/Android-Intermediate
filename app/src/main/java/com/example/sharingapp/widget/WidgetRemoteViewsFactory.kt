@@ -34,24 +34,22 @@ class WidgetRemoteViewsFactory(private val context: Context, private val intent:
     }
 
     override fun onDataSetChanged() {
-        // Mengambil data dari server menggunakan Retrofit
+        // mengambil data dari server menggunakan retrofit
         val apiService = ApiConfig.getApiService()
-        val sharedPreferences = SharedPreference.getInstance(context.applicationContext.dataStore)
+        val sharedPreferences = SharedPreference.getInstance(
+            context.applicationContext.dataStore
+        )
 
-        GlobalScope.launch {
-            val token = sharedPreferences.ambilToken().first()
-            if (token.isNotEmpty()) {
-                try {
-                    val storyResponses = apiService.getStories("Bearer $token", 1, 10, null)
-                    items = storyResponses.listStory ?: emptyList()
-                    // Update data pada widget
-                    val appWidgetManager = AppWidgetManager.getInstance(context)
-                    val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(context, WidgetStory::class.java))
-                    appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.stack_view)
-                } catch (e: Exception) {
-                    // Tangani kesalahan di sini jika diperlukan
-                    Log.e("WidgetRemoteViewsFactory", "onDataSetChanged: ${e.message}")
-                }
+        val token = runBlocking {
+            sharedPreferences.ambilToken().first()
+        }
+
+        if (token.isNotEmpty()) {
+            val call = apiService.getStories("Bearer $token", 1, 10, null)
+            val response = call.execute()
+
+            if (response.isSuccessful) {
+                items = (response.body()?.listStory ?: emptyList()) as List<Story>
             }
         }
     }

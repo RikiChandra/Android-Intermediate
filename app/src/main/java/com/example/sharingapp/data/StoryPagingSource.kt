@@ -8,6 +8,7 @@ import com.example.sharingapp.responses.Story
 import com.example.sharingapp.setting.SharedPreference
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
+import retrofit2.awaitResponse
 
 class StoryPagingSource(private val apiService: ApiService, private val sharedPreference: SharedPreference) : PagingSource<Int, Story>() {
 
@@ -30,8 +31,8 @@ class StoryPagingSource(private val apiService: ApiService, private val sharedPr
                 LoadResult.Error(Exception("Token is null or empty"))
             } else {
                 val position = params.key ?: STARTING_PAGE_INDEX
-                val response = apiService.getStories(bearer, position, params.loadSize, null)
-                val stories = response.listStory
+                val response = apiService.getStories(bearer, position, params.loadSize, null).awaitResponse().body()
+                val stories = response?.listStory as List<Story>
                 LoadResult.Page(
                     data = stories,
                     prevKey = if (position == STARTING_PAGE_INDEX) null else position - 1,

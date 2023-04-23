@@ -33,12 +33,12 @@ interface ApiService {
     ): Call<RegisterResponses>
 
     @GET("stories")
-    suspend fun getStories(
+    fun getStories(
         @Header("Authorization") authorization: String,
         @Query("page") page: Int?,
         @Query("size") size: Int?,
         @Query("location") location: Int?
-    ): StoryResponses
+    ): Call<StoryResponses>
 
     @Multipart
     @POST("stories")
