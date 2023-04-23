@@ -54,4 +54,7 @@
     <string name="splash">Dicoding Academy</string>
     <string name="switch_camera">Switch Camera</string>
     <string name="retry">Try Again</string>
+    <string name="translate">Change Language</string>
+    <string name="maps">Maps</string>
+    <string name="title_activity_maps">MapsActivity</string>
 </resources>

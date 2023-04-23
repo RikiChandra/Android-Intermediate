@@ -3,6 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/translate"
+        android:icon="@drawable/baseline_translate_24"
+        android:title="@string/translate"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/map"
+        android:icon="@drawable/baseline_map_24"
+        android:title="@string/maps"
+        app:showAsAction="always" />
+
+
+    <item
         android:id="@+id/logout"
         android:icon="@drawable/baseline_logout_24"
         android:title="@string/logout"

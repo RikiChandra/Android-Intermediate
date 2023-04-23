@@ -22,11 +22,13 @@ import com.example.sharingapp.setting.ViewModelFactory
 import com.example.sharingapp.view.story.AddStoryActivity
 import com.example.sharingapp.view.story.StoryAdapter
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import android.provider.Settings
 import androidx.lifecycle.asLiveData
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.sharingapp.api.ApiConfig
 import com.example.sharingapp.data.LoadingStateAdapter
+import com.example.sharingapp.view.map.MapsActivity
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 class MainActivity : AppCompatActivity() {
@@ -128,6 +130,14 @@ class MainActivity : AppCompatActivity() {
                 viewModel.logout()
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
+                true
+            }
+            R.id.translate -> {
+                startActivity(Intent(Settings.ACTION_LOCALE_SETTINGS))
+                true
+            }
+            R.id.map -> {
+                startActivity(Intent(this, MapsActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)
