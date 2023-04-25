@@ -2,6 +2,7 @@ package com.example.sharingapp.setting
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
+import com.example.sharingapp.R
 import com.google.android.gms.maps.GoogleMap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -20,9 +21,9 @@ class SharedPreference private constructor(private val dataStore: DataStore<Pref
     )
 
     enum class MapType(val value: Int) {
-        DEFAULT(GoogleMap.MAP_TYPE_NORMAL),
-        SATELLITE(GoogleMap.MAP_TYPE_SATELLITE),
-        TERRAIN(GoogleMap.MAP_TYPE_TERRAIN)
+        DEFAULT(R.raw.maps_default),
+        NIGHT(R.raw.maps_night),
+        RETRO(R.raw.maps_retro)
     }
 
 
@@ -68,15 +69,17 @@ class SharedPreference private constructor(private val dataStore: DataStore<Pref
         }
     }
 
-    suspend fun saveMapType(mapType: String) {
+    suspend fun saveMapType(mapType: MapType) {
         dataStore.edit {
-            it[KEY_MAP_TYPE] = mapType
+            it[KEY_MAP_TYPE] = mapType.name
         }
     }
 
-    fun getMapType(): Flow<String> {
+    fun getMapType(): Flow<MapType> {
         return dataStore.data.map {
-            it[KEY_MAP_TYPE] ?: GoogleMap.MAP_TYPE_NORMAL.toString()
+            it[KEY_MAP_TYPE]?.let { value ->
+                MapType.valueOf(value)
+            } ?: MapType.DEFAULT
         }
     }
 

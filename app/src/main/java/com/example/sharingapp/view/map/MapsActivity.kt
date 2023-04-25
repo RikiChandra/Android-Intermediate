@@ -33,6 +33,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import androidx.core.util.Pair
 import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.material.card.MaterialCardView
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -57,18 +58,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val preference = SharedPreference.getInstance(dataStore)
 
-        mapFragment.getMapAsync {
-            googleMap ->
+        mapFragment.getMapAsync { googleMap ->
             mMap = googleMap
 
             lifecycleScope.launch {
                 val mapType = preference.getMapType().first()
-                mMap.mapType = mapType.toInt()
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this@MapsActivity, mapType.value))
             }
-
         }
-
     }
+
+
+
+
 
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -172,36 +174,34 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val bottomSheet = BottomSheetDialog(this)
         val bottomSheetView = layoutInflater.inflate(R.layout.activity_option_style_map, null)
 
-
-
         bottomSheetView.findViewById<MaterialCardView>(R.id.defaultMap).setOnClickListener {
-            mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, SharedPreference.MapType.DEFAULT.value))
             lifecycleScope.launch {
-                preference.saveMapType(GoogleMap.MAP_TYPE_NORMAL.toString())
+                preference.saveMapType(SharedPreference.MapType.DEFAULT)
             }
             bottomSheet.dismiss()
         }
 
-        bottomSheetView.findViewById<MaterialCardView>(R.id.satelliteMap).setOnClickListener {
-            mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
+        bottomSheetView.findViewById<MaterialCardView>(R.id.nightMap).setOnClickListener {
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, SharedPreference.MapType.NIGHT.value))
             lifecycleScope.launch {
-                preference.saveMapType(GoogleMap.MAP_TYPE_SATELLITE.toString())
+                preference.saveMapType(SharedPreference.MapType.NIGHT)
             }
             bottomSheet.dismiss()
         }
 
-        bottomSheetView.findViewById<MaterialCardView>(R.id.terrainMap).setOnClickListener {
-            mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
+        bottomSheetView.findViewById<MaterialCardView>(R.id.RetroMap).setOnClickListener {
+            mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, SharedPreference.MapType.RETRO.value))
             lifecycleScope.launch {
-                preference.saveMapType(GoogleMap.MAP_TYPE_TERRAIN.toString())
+                preference.saveMapType(SharedPreference.MapType.RETRO)
             }
             bottomSheet.dismiss()
         }
-
 
         bottomSheet.setContentView(bottomSheetView)
         bottomSheet.show()
     }
+
 
 
 
