@@ -57,4 +57,5 @@
     <string name="translate">Change Language</string>
     <string name="maps">Maps</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="style_map">Change Style Map</string>
 </resources>

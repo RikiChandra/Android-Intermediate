@@ -1,27 +1,41 @@
 package com.example.sharingapp.view.map
 
+
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
+import com.bumptech.glide.Glide
 import com.example.sharingapp.R
 import com.example.sharingapp.api.ApiConfig
 import com.example.sharingapp.databinding.ActivityMapsBinding
 import com.example.sharingapp.setting.SharedPreference
 import com.example.sharingapp.setting.ViewModelFactory
+import com.example.sharingapp.view.detail.DetailActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import androidx.core.util.Pair
+import com.example.sharingapp.auth.LoginActivity
+import com.example.sharingapp.setting.formatElapsedTime
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -56,6 +70,49 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val preference = SharedPreference.getInstance(dataStore)
         viewModel = ViewModelProvider(this, ViewModelFactory(preference, ApiConfig.getApiService()))[MapsViewModel::class.java]
 
+        mMap.setOnMarkerClickListener { marker ->
+            // Dapatkan informasi yang terkait dengan marker yang diklik
+            val story = viewModel.storyList.value?.find { it.name == marker.title }
+
+            // Tampilkan BottomSheet dengan informasi yang sesuai
+            val bottomSheet = BottomSheetDialog(this)
+            val bottomSheetView = layoutInflater.inflate(R.layout.activity_bottom_sheet_detail, null)
+
+            // Isi tampilan BottomSheet dengan informasi yang sesuai
+            bottomSheetView.findViewById<TextView>(R.id.title).text = story?.name
+            bottomSheetView.findViewById<TextView>(R.id.createdAt).text = story?.description
+
+            // Tampilkan gambar menggunakan Glide
+            Glide.with(this)
+                .load(story?.photoUrl)
+                .into(bottomSheetView.findViewById(R.id.img))
+
+            // Tambahkan onClickListener untuk membuka DetailActivity
+            bottomSheetView.setOnClickListener {
+                val intent = Intent(this, DetailActivity::class.java)
+                intent.putExtra("story", story)
+
+                val optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this,
+                    Pair(bottomSheetView.findViewById(R.id.img), getString(R.string.transitionImage)),
+                    Pair(bottomSheetView.findViewById<TextView>(R.id.title), getString(R.string.name)),
+                    Pair(bottomSheetView.findViewById<TextView>(R.id.createdAt), getString(R.string.createdAt))
+                )
+
+                startActivity(intent, optionsCompat.toBundle())
+            }
+
+
+            bottomSheet.setContentView(bottomSheetView)
+            bottomSheet.show()
+
+            true
+        }
+
+
+
+
+
         viewModel.storyList.observe(this) { stories ->
             var firstMarkerAdded = false
             for (story in stories) {
@@ -72,6 +129,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val inflater = menuInflater
+        menu?.clear()
+        inflater.inflate(R.menu.option_maps, menu)
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.chgStyle -> {
+                Toast.makeText(this, "Change Style", Toast.LENGTH_SHORT).show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     private val requestPermissionLauncher =

@@ -57,4 +57,5 @@
     <string name="retry">Coba lagi</string>
     <string name="translate">Ganti bahasa</string>
     <string name="maps">Peta</string>
+    <string name="style_map">Change Style Map</string>
 </resources>
