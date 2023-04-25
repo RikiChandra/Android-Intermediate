@@ -7,11 +7,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.ContextCompat
@@ -34,8 +33,10 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import androidx.core.util.Pair
-import com.example.sharingapp.auth.LoginActivity
-import com.example.sharingapp.setting.formatElapsedTime
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.card.MaterialCardView
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -54,6 +55,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        val preference = SharedPreference.getInstance(dataStore)
+
+        mapFragment.getMapAsync {
+            googleMap ->
+            mMap = googleMap
+
+            lifecycleScope.launch {
+                val mapType = preference.getMapType().first()
+                mMap.mapType = mapType.toInt()
+            }
+
+        }
+
+
+
+
+
     }
 
 
@@ -69,6 +88,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val preference = SharedPreference.getInstance(dataStore)
         viewModel = ViewModelProvider(this, ViewModelFactory(preference, ApiConfig.getApiService()))[MapsViewModel::class.java]
+
+
 
         mMap.setOnMarkerClickListener { marker ->
             // Dapatkan informasi yang terkait dengan marker yang diklik
@@ -102,12 +123,14 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 startActivity(intent, optionsCompat.toBundle())
             }
 
-
             bottomSheet.setContentView(bottomSheetView)
             bottomSheet.show()
 
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(marker.position, 10f),10, null)
+
             true
         }
+
 
 
 
@@ -142,12 +165,55 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.chgStyle -> {
-                Toast.makeText(this, "Change Style", Toast.LENGTH_SHORT).show()
+                myTypeMap()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
+
+    private fun myTypeMap() {
+        val preference = SharedPreference.getInstance(dataStore)
+        val bottomSheet = BottomSheetDialog(this)
+        val bottomSheetView = layoutInflater.inflate(R.layout.activity_option_style_map, null)
+
+
+
+        bottomSheetView.findViewById<MaterialCardView>(R.id.defaultMap).setOnClickListener {
+            mMap.mapType = GoogleMap.MAP_TYPE_NORMAL
+            lifecycleScope.launch {
+                preference.saveMapType(GoogleMap.MAP_TYPE_NORMAL.toString())
+            }
+            bottomSheet.dismiss()
+        }
+
+        bottomSheetView.findViewById<MaterialCardView>(R.id.satelliteMap).setOnClickListener {
+            mMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
+            lifecycleScope.launch {
+                preference.saveMapType(GoogleMap.MAP_TYPE_SATELLITE.toString())
+            }
+            bottomSheet.dismiss()
+        }
+
+        bottomSheetView.findViewById<MaterialCardView>(R.id.terrainMap).setOnClickListener {
+            mMap.mapType = GoogleMap.MAP_TYPE_TERRAIN
+            lifecycleScope.launch {
+                preference.saveMapType(GoogleMap.MAP_TYPE_TERRAIN.toString())
+            }
+            bottomSheet.dismiss()
+        }
+
+
+        bottomSheet.setContentView(bottomSheetView)
+        bottomSheet.show()
+    }
+
+
+
+
+
+
+
 
     private val requestPermissionLauncher =
         registerForActivityResult(
