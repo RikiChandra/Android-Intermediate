@@ -8,6 +8,7 @@ import com.example.sharingapp.view.main.MainViewModel
 import com.example.sharingapp.auth.LoginViewModel
 import com.example.sharingapp.auth.RegisterViewModel
 import com.example.sharingapp.data.StoryRepository
+import com.example.sharingapp.view.map.MapsViewModel
 import com.example.sharingapp.view.story.StoryViewModel
 
 class ViewModelFactory(private val preference: SharedPreference, private val apiService: ApiService) : ViewModelProvider.Factory {
@@ -29,6 +30,9 @@ class ViewModelFactory(private val preference: SharedPreference, private val api
             }
             modelClass.isAssignableFrom(StoryViewModel::class.java) -> {
                 StoryViewModel(preference) as T
+            }
+            modelClass.isAssignableFrom(MapsViewModel::class.java) -> {
+                MapsViewModel(apiService, preference) as T
             }
 
             else -> throw IllegalArgumentException("Unknown ViewModel class" + modelClass.name)

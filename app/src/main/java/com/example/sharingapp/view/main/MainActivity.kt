@@ -57,9 +57,17 @@ class MainActivity : AppCompatActivity() {
 
         binding.datas.adapter = storyAdapter
 
+        binding.datas.adapter = storyAdapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                storyAdapter.retry()
+            }
+        )
+
         viewModel.stories.observe(this) {
             storyAdapter.submitData(lifecycle, it)
-            binding.datas.layoutManager?.scrollToPosition(0)
+            binding.datas.post {
+                binding.datas.layoutManager?.scrollToPosition(0)
+            }
         }
 
 
@@ -74,11 +82,10 @@ class MainActivity : AppCompatActivity() {
         }
 
         storyAdapter.loadStateFlow.asLiveData().observe(this) {
-            binding.swipe.isRefreshing = it.refresh is LoadState.Loading
+            binding.swipe.isRefreshing = it.source.refresh is LoadState.Loading
         }
 
         addActivity()
-        setData()
 
     }
 
@@ -91,29 +98,18 @@ class MainActivity : AppCompatActivity() {
     private val storyIntent =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == INTENT_ADD_STORY) {
-                val intent = Intent(this, MainActivity::class.java)
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-                finish()
-                refreshData()
+//                val intent = Intent(this, MainActivity::class.java)
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+//                startActivity(intent)
+//                finish()
+                storyAdapter.refresh()
             }
         }
 
 
-    private fun setData(){
-        binding.datas.adapter = storyAdapter.withLoadStateFooter(
-            footer = LoadingStateAdapter {
-                storyAdapter.retry()
-            }
-        )
 
-        refreshData()
 
-    }
 
-    private fun refreshData(){
-        storyAdapter.refresh()
-    }
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -147,6 +143,8 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val INTENT_ADD_STORY = 2222
     }
+
+
 
 
 }
