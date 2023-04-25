@@ -58,4 +58,9 @@
     <string name="maps">Maps</string>
     <string name="title_activity_maps">MapsActivity</string>
     <string name="style_map">Change Style Map</string>
+    <string name="shareLoc">Share Location</string>
+    <string name="type_map">Type Map</string>
+    <string name="normal_type_map">Normal</string>
+    <string name="satellite_type_map">Satellite</string>
+    <string name="terrain_type_map">Terrain</string>
 </resources>

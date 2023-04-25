@@ -7,6 +7,9 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.media.ExifInterface
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -36,6 +39,9 @@ class AddStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddStoryBinding
     private var getFile : File? = null
     private lateinit var viewModel: StoryViewModel
+    private val FINE_LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
+    private lateinit var locationManager: LocationManager
+
 
 
     override fun onRequestPermissionsResult(
@@ -78,6 +84,14 @@ class AddStoryActivity : AppCompatActivity() {
             )
         }
 
+        locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+
+        if (ContextCompat.checkSelfPermission(this, FINE_LOCATION_PERMISSION)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(FINE_LOCATION_PERMISSION), REQUEST_CODE_PERMISSIONS)
+        }
+
+
         binding.cameraButton.setOnClickListener {
             startCamera()
         }
@@ -91,9 +105,36 @@ class AddStoryActivity : AppCompatActivity() {
             )
         }
 
+        binding.shareLoc.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                if (ContextCompat.checkSelfPermission(this, FINE_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0f, locationListener)
+                } else {
+                    ActivityCompat.requestPermissions(this, arrayOf(FINE_LOCATION_PERMISSION), REQUEST_CODE_PERMISSIONS)
+                }
+            } else {
+                locationManager.removeUpdates(locationListener)
+            }
+        }
+
         binding.postButton.setOnClickListener {
             val description = binding.descriptionEditText.text.toString()
             val file = getFile
+            var latitude: Float? = null
+            var longitude: Float? = null
+
+            if (binding.shareLoc.isChecked) {
+                if (ContextCompat.checkSelfPermission(this, FINE_LOCATION_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
+                    val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+                    val location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                    latitude = location?.latitude?.toFloat()
+                    longitude = location?.longitude?.toFloat()
+                } else {
+                    ActivityCompat.requestPermissions(this, arrayOf(FINE_LOCATION_PERMISSION), REQUEST_CODE_PERMISSIONS)
+                    return@setOnClickListener
+                }
+            }
+
             if (file != null && description.isNotEmpty()) {
                 val compressedFile = reduceFileImage(file)
                 viewModel.store(
@@ -106,13 +147,14 @@ class AddStoryActivity : AppCompatActivity() {
                     },
                     description,
                     compressedFile,
-                    null,
-                    null
+                    latitude,
+                    longitude
                 )
             } else {
                 Toast.makeText(this, getString(R.string.fillField), Toast.LENGTH_SHORT).show()
             }
         }
+
 
 
 
@@ -136,6 +178,20 @@ class AddStoryActivity : AppCompatActivity() {
 
 
     }
+
+    private val locationListener = object : LocationListener {
+        override fun onLocationChanged(location: Location) {
+            val latitude = location.latitude
+            val longitude = location.longitude
+            // Lakukan sesuatu dengan latitude dan longitude, misalnya mengirim ke server
+        }
+
+        override fun onProviderDisabled(provider: String) {}
+        override fun onProviderEnabled(provider: String) {}
+        override fun onStatusChanged(provider: String, status: Int, extras: Bundle?) {}
+    }
+
+
 
 
 
