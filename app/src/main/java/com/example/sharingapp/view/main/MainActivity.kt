@@ -30,12 +30,13 @@ import com.example.sharingapp.api.ApiConfig
 import com.example.sharingapp.data.LoadingStateAdapter
 import com.example.sharingapp.view.map.MapsActivity
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var viewModel: MainViewModel
     private val storyAdapter = StoryAdapter(this)
+    private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,17 +58,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.datas.adapter = storyAdapter
 
+
         binding.datas.adapter = storyAdapter.withLoadStateFooter(
             footer = LoadingStateAdapter {
                 storyAdapter.retry()
             }
         )
 
-        viewModel.stories.observe(this) {
+        viewModel.stories().observe(this) {
             storyAdapter.submitData(lifecycle, it)
-            binding.datas.post {
-                binding.datas.layoutManager?.scrollToPosition(0)
-            }
         }
 
 
@@ -87,6 +86,7 @@ class MainActivity : AppCompatActivity() {
 
         addActivity()
 
+
     }
 
     private fun addActivity(){
@@ -98,19 +98,9 @@ class MainActivity : AppCompatActivity() {
     private val storyIntent =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == INTENT_ADD_STORY) {
-//                val intent = Intent(this, MainActivity::class.java)
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
-//                startActivity(intent)
-//                finish()
                 storyAdapter.refresh()
             }
         }
-
-
-
-
-
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
@@ -123,7 +113,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.logout -> {
-                viewModel.logout()
+                viewModel.isLogout()
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
                 true
@@ -143,8 +133,5 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val INTENT_ADD_STORY = 2222
     }
-
-
-
 
 }
