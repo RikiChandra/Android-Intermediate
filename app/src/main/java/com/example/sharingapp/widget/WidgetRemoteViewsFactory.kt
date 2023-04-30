@@ -1,11 +1,9 @@
 package com.example.sharingapp.widget
 
 
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
+
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
 import androidx.datastore.core.DataStore
@@ -16,9 +14,7 @@ import com.example.sharingapp.R
 import com.example.sharingapp.api.ApiConfig
 import com.example.sharingapp.responses.Story
 import com.example.sharingapp.setting.SharedPreference
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 

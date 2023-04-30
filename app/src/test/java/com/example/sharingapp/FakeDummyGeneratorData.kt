@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import com.example.sharingapp.responses.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
@@ -12,20 +13,20 @@ import java.io.File
 
 object FakeDummyGeneratorData {
 
-    fun getBearerToken() = "bearer token"
+    fun getBearerToken() = "My Token"
 
     fun getFakeStories(): List<Story> {
         val items = arrayListOf<Story>()
 
         for (i in 0 until 10) {
             val story = Story(
-                id = "story-FvU4u0Vp2S3PMsFg",
-                photoUrl = "https://story-api.dicoding.dev/images/stories/photos-1641623658595_dummy-pic.png",
-                createdAt = "2022-01-08T06:34:18.598Z",
-                name = "Dimas",
-                description = "Lorem Ipsum",
-                lon = "-16.002",
-                lat = "-10.212"
+                id = "My id",
+                photoUrl = "https://story-api.dicoding.dev/images/stories/photos-1682585713309_zNJVuVng.jpg",
+                createdAt = "2023-04-27T08:44:14.012Z",
+                name = "Test2",
+                description = "Saya menyerah bikin ini",
+                lon = "7.2318384234",
+                lat = "2.324234"
             )
 
             items.add(story)
@@ -33,6 +34,5 @@ object FakeDummyGeneratorData {
 
         return items
     }
-
 }
 

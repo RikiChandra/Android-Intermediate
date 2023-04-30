@@ -1,0 +1,7 @@
+MainViewModel 
+Ketika berhasil memuat data cerita.
+- Memastikan data tidak null.
+- Memastikan jumlah data sesuai dengan yang diharapkan.
+- Memastikan data pertama yang dikembalikan sesuai.
+Ketika tidak ada data cerita.
+- Memastikan jumlah data yang dikembalikan nol.

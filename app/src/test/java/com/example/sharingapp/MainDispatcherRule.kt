@@ -20,4 +20,5 @@ class MainDispatcherRule(
         Dispatchers.resetMain()
         super.finished(description)
     }
+
 }

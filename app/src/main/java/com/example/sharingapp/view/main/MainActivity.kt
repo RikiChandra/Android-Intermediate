@@ -30,7 +30,6 @@ import com.example.sharingapp.api.ApiConfig
 import com.example.sharingapp.data.LoadingStateAdapter
 import com.example.sharingapp.view.map.MapsActivity
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -44,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
 
         setContentView(binding.root)
-
 
 
         val preference = SharedPreference.getInstance(dataStore)
@@ -67,6 +65,9 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.stories().observe(this) {
             storyAdapter.submitData(lifecycle, it)
+            binding.datas.postDelayed({
+                binding.datas.layoutManager?.smoothScrollToPosition(binding.datas, null, 0)
+            }, 1000)
         }
 
 
@@ -83,6 +84,7 @@ class MainActivity : AppCompatActivity() {
         storyAdapter.loadStateFlow.asLiveData().observe(this) {
             binding.swipe.isRefreshing = it.source.refresh is LoadState.Loading
         }
+
 
         addActivity()
 
@@ -101,6 +103,8 @@ class MainActivity : AppCompatActivity() {
                 storyAdapter.refresh()
             }
         }
+
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         val inflater = menuInflater
